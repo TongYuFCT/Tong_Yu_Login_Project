@@ -26,7 +26,7 @@ import com.google.cloud.datastore.KeyFactory;
 
 
 
-@Path("/api/login")
+@Path("/api")
 @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 public class LoginResource {
 	

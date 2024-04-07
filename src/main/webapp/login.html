@@ -41,7 +41,7 @@
           };
 
           var request = new XMLHttpRequest();
-          request.open("POST", " /api/login", true); 
+          request.open("POST", "/rest/api/login", true); 
           request.setRequestHeader("Content-Type", "application/json"); 
           request.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE) {
