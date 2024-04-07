@@ -15,15 +15,15 @@ import com.google.cloud.datastore.QueryResults;
 
 import pt.unl.fct.di.apdc.firstwebapp.util.UserData;
 
-@Path("/api/register")
+@Path("/api")
 public class RegisterResource {
 
     private final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
     private final KeyFactory userKeyFactory = datastore.newKeyFactory().setKind("User");
     public RegisterResource() {}
     
-    
-    @POST
+    @POST    
+    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response doRegister(UserData data) {
     	if (data.getUsername() == null || data.getUsername().trim().isEmpty()) {

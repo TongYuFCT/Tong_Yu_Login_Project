@@ -36,7 +36,7 @@ public class LoginResource {
 	public LoginResource() {}
     
     @POST
-    @Path("/")
+    @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response doLogin(LoginData data) {
@@ -47,7 +47,7 @@ public class LoginResource {
 		}return Response.status(Status.FORBIDDEN).entity("Incorrect username or password.").build();
     }
     
-    // 这个方法假设在Datastore中有一个名为"User"的种类（Kind），用来存储用户信息。
+    // tem de existir Key Kind User
     private boolean validateUser(String username, String password) {
         KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
         Key key = keyFactory.newKey(username);
