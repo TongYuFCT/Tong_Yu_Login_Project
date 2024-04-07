@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Login to Application</title>
+</head>
+
+<body>
+  <h1>Login to Application</h1>
+
+  <table>
+    <tr>
+      <td style="font-weight: bold;">Login to the application:</td>
+    </tr>
+    <tr>
+      <td>
+        <form name="loginForm" id="loginForm">
+          <div>
+            Username: <input type="text" name="username" id="username" />
+            Password: <input type="password" name="password" id="password" />
+            <input type="button" onclick='loginUser()' value="Login" />
+          </div>
+        </form>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+      function loginUser() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        
+        if (username === "" || password === "") {
+          alert("Both username and password are required");
+          return false;
+        } else {
+          var loginData = {
+            username: username,
+            password: password
+          };
+
+          var request = new XMLHttpRequest();
+          request.open("POST", " /api/login/", true); 
+          request.setRequestHeader("Content-Type", "application/json"); 
+          request.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE) {
+              if (this.status === 200) {
+                console.log('Login Successful:', this.responseText);
+                // Handle login success here
+              } else {
+                console.error('Login failed:', this.responseText);
+                // Handle login failure here
+              }
+            }
+          };
+          request.send(JSON.stringify(loginData));
+        }
+      }
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Register to Application</h2>
+    <form id="registerForm">
+        Username: <input type="text" id="username" required><br>
+        Password: <input type="password" id="password" required><br>
+        Email: <input type="email" id="email" required><br>
+        <button type="button" onclick="registerUser()">Register</button>
+    </form>
+
+    <script>
+        function registerUser() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var email = document.getElementById('email').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/register", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    // sucesso
+                    console.log("Registration successful:", xhr.responseText);
+                } else {
+                    // falhou
+                    console.error("Registration failed:", xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify({
+                username: username,
+                password: password,
+                email: email
+            }));
+        }
+    </script>
+</body>
+</html>
