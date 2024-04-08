@@ -216,7 +216,7 @@ public class LoginResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response modifyUserAttributes(UserAttributeUpdateRequest request) {
-    	Key key = keyFactory.newKey(request.loginUser);
+    	Key key = keyFactory.newKey(request.targetUser);
         Entity user  = datastore.get(key);
         if(request.loginRole.equals("USER")) {
         	if(request.loginUser.equals(request.targetUser) && request.telefone != null) {
@@ -276,32 +276,22 @@ public class LoginResource {
 
     private boolean updateUserAttributes(String targetUser, String telefone, String estado, String role) {
     	Key key = keyFactory.newKey(targetUser);
-        Entity user  = datastore.get(key);
-        if(telefone != null) {
-        	Entity updatedUser = Entity.newBuilder(user)
-                    .set("telefone",telefone)
-                    .build();
-
-            datastore.update(updatedUser);
-        }
-        
-        if(estado != null) {
-        	Entity updatedUser = Entity.newBuilder(user)
-                    .set("estado",estado)
-                    .build();
-
-            datastore.update(updatedUser);
-        }
-        
-        if(role != null) {
-        	Entity updatedUser = Entity.newBuilder(user)
-                    .set("role",role)
-                    .build();
-
-            datastore.update(updatedUser);
-        }
-        
-        return true;
+	    Entity user = datastore.get(key);
+	    Entity.Builder updatedUserBuilder = Entity.newBuilder(user);
+	
+	    if (telefone != null) {
+	        updatedUserBuilder.set("telefone", telefone);
+	    }
+	    if (estado != null) {
+	        updatedUserBuilder.set("estado", estado);
+	    }
+	    if (role != null) {
+	        updatedUserBuilder.set("role", role);
+	    }
+	
+	    Entity updatedUser = updatedUserBuilder.build();
+	    datastore.update(updatedUser);
+	    return true;
     }
     
     private Response updateAccountStatus(Entity newUser, String newStatus) {
