@@ -7,7 +7,7 @@ public class UserData {
 	public String password;
 	public String email;
 	public String nome;
-	public String tel;
+	public String telefone;
 	
 	public UserData() {
 		
@@ -18,7 +18,7 @@ public class UserData {
 		this.password = password;
 		this.email = email;
 		this.nome = nome;
-		this.tel = telefone;
+		this.telefone = telefone;
 	}
 
 	public String getUsername() {
@@ -40,7 +40,7 @@ public class UserData {
 		return this.nome;
 	}
 	public String getTelefone() {
-		return this.tel;
+		return this.telefone;
 	}
 	
 	
