@@ -1,6 +1,5 @@
 package pt.unl.fct.di.apdc.firstwebapp.util;
 
-import com.google.cloud.datastore.Value;
 
 public class UserData {
 	
@@ -14,12 +13,12 @@ public class UserData {
 		
 	}
 	
-	public UserData(String username, String password,String email,String nome,String tel) {
+	public UserData(String username, String password,String email,String nome,String telefone) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.nome = nome;
-		this.tel = tel;
+		this.tel = telefone;
 	}
 
 	public String getUsername() {
