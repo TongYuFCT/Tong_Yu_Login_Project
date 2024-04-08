@@ -47,8 +47,8 @@
           request.open("POST", "/rest/api/login", true); 
           request.setRequestHeader("Content-Type", "application/json"); 
           request.onreadystatechange = function() {
-            if (this.readyState === XMLHttpRequest.DONE) {
-              if (this.status === 200) {
+            if (request.readyState === XMLHttpRequest.DONE) {
+              if (request.status >= 200 && request.status < 300) {
                 const responseData = JSON.parse(this.responseText);
                 console.log('Login Successful:', this.responseText);
                 // Handle login success here
@@ -79,26 +79,38 @@
       }
       function displayUserOperations(role) {
         var operationsDiv = document.getElementById('operations');
-        operationsDiv.innerHTML = ''; // 清空之前的内容
+        operationsDiv.innerHTML = ''; 
         var operationsHtml = '';
 
-        // 根据角色展示不同的权限操作
-        switch(role) {
+        // exibindo operações consoante o tipo de role 
+       switch(role) {
           case 'SU':
-            operationsHtml += '<p>SU可以执行的操作...</p>';
+            operationsHtml += '<p>SU: pode passar qualquer conta de qualquer role para qualquer role</p>' 
+                        +'<p>SU: pode passar o estado de qualquer conta de INATIVO para ATIVO (ou vice-versa)</p>'
+                        +'<p>SU: pode remover contas de qualquer utilizador e de qualquer role</p>'
+                        +'<p>SU: listar todos os atributos de utilizadores registados ou do estado da conta (de qualquer role)</p>';
             break;
           case 'GA':
-            operationsHtml += '<p>GA可以执行的操作...</p>';
+            operationsHtml += '<p>GA: pode passar contas USER para GBO (ou vice-versa)</p>'
+                        +'<p>GA: pode mudar o estado de contas de roles USER ou GBO de INATIVO para ATIVO ou vice-versa</p>'
+                        +'<p>GA: pode remover quaisquer contas de roles GBO ou de USER</p>'
+                        +'<p>GA: listar todos os atributos de utilizadores registados (que tenham role USER, GA ou GBO) e independentemente de estarem com perfil público ou privado ou do estado da conta</p>';
             break;
           case 'GBO':
-            operationsHtml += '<p>GBO可以执行的操作...</p>';
+            operationsHtml += '<p>GBO: não pode mudar roles</p>'
+                        +'<p>GBO: pode mudar o estado de contas de role USER de INATIVO ara ATIVO ou vice-versa</p>'
+                        +'<p>GBO: listar todos os atributos de utilizadores registados (mas apenas os que têm role USER) e independentemente de estarem com perfil público ou privado ou do estado da conta</p>';
             break;
           case 'USER':
-            operationsHtml += '<p>USER可以执行的操作...</p>';
+            operationsHtml += '<p>USER: não pode mudar roles</p>'
+                        +'<p>USER: não pode mudar estado de contas</p>'
+                        +'<p>USER: só pode remover a sua própria conta (o próprio utilizador)</p>'
+                        +'<p>USER: pode modificar todos os atributos da sua própria conta, exceto os atributos Username (ou UserID), Email ou Nome (inicialmente registados na criação da conta), assim como quaisquer atributos de controlo tal como ROLE e ESTADO</p>';
             break;
           default:
-            operationsHtml = '<p>未知角色</p>';
+            operationsHtml = '<p>desonhecida</p>';
         }
+
 
         operationsDiv.innerHTML = operationsHtml; // 显示操作列表
       }

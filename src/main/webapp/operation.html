@@ -37,21 +37,29 @@
         <input type="button" onclick="removeUser()" value="Remove User" />
       </div>
     </form>
-  </div>
+  </div> 
 
   <div>
     <h2>Modify User Attributes:</h2>
-    <form name="modifyUserAttributesForm" id="modifyUserAttributesForm">
-      <div>
-        Name: <input type="text" name="name" id="name" />
-        Email: <input type="text" name="email" id="email" />
-        Tel: <input type="text" name="tel" id="tel" />
-        Estado: <input type="text" name="estado" id="estado" />
-        Role: <input type="text" name="role" id="role" />
-        <input type="button" onclick="modifyUserAttributes()" value="Modify Attributes" />
-      </div>
+    <form id="modifyUserAttributesForm">
+      <label for="targetUsername">Username:</label>
+      <input type="text" id="targetUsername" name="targetUsername"><br>
+      <label for="tel">Telephone:</label>
+      <input type="text" id="tel" name="tel"><br>
+      <label for="estado">Estado:</label>
+      <input type="text" id="estado" name="estado"><br>
+      <label for="role">Role:</label>
+      <select id="role" name="role">
+        <option value="USER">USER</option>
+        <option value="GBO">GBO</option>
+        <option value="GA">GA</option>
+        <option value="SU">SU</option>
+      </select><br>
+      <button type="button" onclick="modifyUserAttributes()">Modify Attributes</button>
     </form>
   </div>
+  
+  
 
   <div>
     <h2>Change Password:</h2>
@@ -63,27 +71,174 @@
       </div>
     </form>
   </div>
+  
+  <div>
+    <input type="button" value="List Users" onclick="listUsers()" />
+  </div>  
 
+  <div>
+    <input type="button" value="Logout" onclick="logout()" />
+  </div>
+  <div id="usersList"></div>
   <script>
+    // obter por local staorage
+    const loginUser = localStorage.getItem('username');
+    const loginRole = localStorage.getItem('role');
+    
+    // Change User Role
     function changeUserRole() {
-      // Functionality for changing user role
+      const newUser = document.getElementById('usernameChangeRole').value;
+      const newRole = document.getElementById('newRole').value;
+      
+      
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/rest/api/changeUserRole", true);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.onload = function () {
+          if (xhr.status >= 200 && xhr.status < 300) {
+              alert("Role changed successfully");
+          } else {
+              alert("Failed to change role: " + xhr.responseText);
+          }
+      };
+      xhr.send(JSON.stringify({
+          loginUser: loginUser,
+          loginRole: loginRole,
+          newUser: newUser, 
+          newRole: newRole
+      }));
     }
 
-    function changeAccountStatus() {
-      // Functionality for changing account status
-    }
+  function changeAccountStatus() {
+  const newUser = document.getElementById('usernameChangeStatus').value;
+  const newStatus = document.getElementById('newStatus').value;
 
-    function removeUser() {
-      // Functionality for removing user
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "/rest/api/changeAccountStatus", true);
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 300) {
+        alert("Account status changed successfully");
+    } else {
+        alert("Failed to change account status: " + xhr.responseText);
     }
+  };
+  xhr.send(JSON.stringify({
+    loginUser: loginUser,
+    loginRole: loginRole,
+    newUser: newUser,
+    newStatus: newStatus
+  }));
+}
 
-    function modifyUserAttributes() {
-      // Functionality for modifying user attributes
+
+function removeUser() {
+  const targetUsername = document.getElementById('usernameRemove').value;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "/rest/api/removeUser", true); //
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 300) {
+        alert("User removed successfully");
+        if(targetUser === localStorage.getItem('username')) {
+                logout();
+            }
+    } else {
+        alert("Failed to remove user: " + xhr.responseText);
     }
+  };
+  xhr.send(JSON.stringify({
+    loginUser: loginUser,
+    loginRole: loginRole,
+    targetUser: targetUsername
+  }));
+}
+
+
+function modifyUserAttributes() {
+  const targetUsername = document.getElementById('targetUsername').value;
+  const telefone = document.getElementById('tel').value;
+  const estado = document.getElementById('estado').value;
+  const role = document.getElementById('role').value; 
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "/rest/api/modifyUserAttributes", true);
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      alert("Attributes modified successfully.");
+    } else {
+      alert("Failed to modify attributes for user " + targetUsername + ": " + xhr.responseText);
+    }
+  };
+
+  xhr.send(JSON.stringify({
+    loginUser: loginUser,
+    loginRole: loginRole,
+    targetUser: targetUsername,
+    telefone: telefone,
+    estado: estado,
+    role: role 
+  }));
+}
+
 
     function changePassword() {
-      // Functionality for changing password
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+    
+    if (newPassword !== confirmNewPassword) {
+        alert("New passwords do not match.");
+        return;
     }
+
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/rest/api/changePassword", true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert("Password changed successfully.");
+            
+        } else {
+            alert("Failed to change password: " + xhr.responseText);
+        }
+    };
+    
+    xhr.send(JSON.stringify({
+      loginUser: loginUser, 
+      currentPassword: currentPassword,
+      newPassword: newPassword
+    }));
+}
+
+
+    
+function listUsers() {
+}
+
+
+  function logout() {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "/rest/api/logout", true);
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8"); 
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        alert("Logged out successfully");
+        localStorage.clear(); 
+        window.location.href = '/login.html'; 
+      } else {
+        alert("Logout failed");
+      }
+    }
+  };
+  xhr.send(); 
+}
+
   </script>
 </body>
 </html>
