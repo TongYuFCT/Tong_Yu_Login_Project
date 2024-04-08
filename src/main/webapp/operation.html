@@ -185,7 +185,6 @@ function modifyUserAttributes() {
 
 
     function changePassword() {
-    const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     const confirmNewPassword = document.getElementById('confirmNewPassword').value;
 
@@ -209,8 +208,7 @@ function modifyUserAttributes() {
     };
     
     xhr.send(JSON.stringify({
-      loginUser: loginUser, 
-      currentPassword: currentPassword,
+      loginUser: loginUser,
       newPassword: newPassword
     }));
 }
