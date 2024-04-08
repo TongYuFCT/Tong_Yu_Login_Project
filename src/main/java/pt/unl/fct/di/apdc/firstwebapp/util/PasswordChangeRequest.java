@@ -3,7 +3,6 @@ package pt.unl.fct.di.apdc.firstwebapp.util;
 public class PasswordChangeRequest {
 
     public String loginUser;
-    public String currentPassword;
     public String newPassword;
 
    
@@ -11,9 +10,8 @@ public class PasswordChangeRequest {
     }
 
     
-    public PasswordChangeRequest(String loginUser, String currentPassword, String newPassword) {
+    public PasswordChangeRequest(String loginUser, String newPassword) {
         this.loginUser = loginUser;
-        this.currentPassword = currentPassword;
         this.newPassword = newPassword;
     }
 }
