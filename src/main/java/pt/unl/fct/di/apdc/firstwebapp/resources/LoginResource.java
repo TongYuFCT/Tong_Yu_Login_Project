@@ -198,10 +198,6 @@ public class LoginResource {
     	Key key = keyFactory.newKey(request.loginUser);
         Entity user  = datastore.get(key);
         
-        boolean isCurrentPasswordCorrect = user.getString("password").equals(request.currentPassword);
-        if (!isCurrentPasswordCorrect) {
-            return Response.status(Response.Status.FORBIDDEN).entity("Current password is incorrect.").build();
-        }
 
         Entity updatedUser = Entity.newBuilder(user)
                 .set("password",request.newPassword)
