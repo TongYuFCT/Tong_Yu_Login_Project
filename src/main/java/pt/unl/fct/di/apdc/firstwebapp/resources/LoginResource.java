@@ -138,22 +138,21 @@ public class LoginResource {
             }else if (userRoleLevel == 2) {
                 int targetUserRoleLevel = convertRole(newUser.getString("role"));
                 if (targetUserRoleLevel == 1) { // USER
-                    return updateAccountStatus(key, changeRequest.newStatus);
+                    return updateAccountStatus(newUser, changeRequest.newStatus);
                 } else {
                     return Response.status(Response.Status.FORBIDDEN).entity("GBO can only change the status of USER accounts.").build();
                 }
             }else if (userRoleLevel == 3) {
                 int targetUserRoleLevel = convertRole(newUser.getString("role"));
                 if (targetUserRoleLevel <= 2) { // USER 和 GBO
-                    return updateAccountStatus(key, changeRequest.newStatus);
+                    return updateAccountStatus(newUser, changeRequest.newStatus);
                 } else {
                     return Response.status(Response.Status.FORBIDDEN).entity("GA cannot change the status of SU or GA accounts.").build();
                 }
             }
                 
-        	return updateAccountStatus(key, changeRequest.newStatus);
+        	return updateAccountStatus(newUser, changeRequest.newStatus);
          
-        	
         	
         }else {
         	return Response.status(Response.Status.BAD_REQUEST).entity("User does not exist.").build();
@@ -248,7 +247,7 @@ public class LoginResource {
     @POST
     @Path("/logout")
     public Response logoutUser() {
-        
+          
         NewCookie expiredCookie = new NewCookie("session::apdc", null, "/", null, null, 0, false);
         
         return Response.ok("Logged out successfully").cookie(expiredCookie).build();
@@ -305,9 +304,9 @@ public class LoginResource {
         return true;
     }
     
-    private Response updateAccountStatus(Key key, String newStatus) {
-        Entity updatedUser = Entity.newBuilder(key)
-            .set("estado", newStatus)
+    private Response updateAccountStatus(Entity newUser, String newStatus) {
+        Entity updatedUser = Entity.newBuilder(newUser)
+            .set("estado", newStatus) 
             .build();
         datastore.update(updatedUser);
         return Response.ok().entity("Account status updated successfully.").build();
