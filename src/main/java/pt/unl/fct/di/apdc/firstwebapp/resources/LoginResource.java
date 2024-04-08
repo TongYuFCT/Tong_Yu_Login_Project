@@ -245,7 +245,7 @@ public class LoginResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("An error occurred while updating user attributes.").build();
         }
     }
-    
+    @POST
     @Path("/logout")
     public Response logoutUser() {
         
