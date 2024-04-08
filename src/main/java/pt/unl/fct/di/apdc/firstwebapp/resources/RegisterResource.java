@@ -1,5 +1,7 @@
 package pt.unl.fct.di.apdc.firstwebapp.resources;
 
+import java.util.logging.Logger;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,6 +22,8 @@ public class RegisterResource {
 
     private final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
     private final KeyFactory userKeyFactory = datastore.newKeyFactory().setKind("User");
+	private static final Logger LOG = Logger.getLogger(LoginResource.class.getName());
+
     public RegisterResource() {}
     
     @POST    
@@ -35,6 +39,7 @@ public class RegisterResource {
         if (data.getEmail() == null || !data.getEmail().matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}")) {
             return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\": \"Invalid email address\"}").build();
         }
+        LOG.fine("Attempting to create user with username: " + data.username);
 
        //verifica o user
         Key usernameKey = userKeyFactory.newKey(data.getUsername());
@@ -52,15 +57,17 @@ public class RegisterResource {
             return Response.status(Response.Status.CONFLICT).entity("{\"error\": \"Email already exists\"}").build();
         }
 
-        // cira nobo entidade e guarda
         Entity newUser = Entity.newBuilder(usernameKey)
-            .set("username", data.getUsername())
-            .set("password", data.getPassword()) 
-            .set("email", data.getEmail())
-            .set("role", "USER") // default User
-            .build();
+                .set("username", data.getUsername())
+                .set("password", data.getPassword())
+                .set("email", data.getEmail())
+                .set("nome",data.getNome())
+                .set("telefone", data.getTelefone())
+                .set("role", "USER") // por default
+                .set("estado", "INATIVO") // fica inativo
+                .build();
 
-        datastore.put(newUser);
+        datastore.put(newUser); // guarda em datastore
 
         // registado
         return Response.status(Response.Status.CREATED).entity("{\"message\": \"User registered successfully\"}").build();

@@ -25,6 +25,9 @@
       </td>
     </tr>
   </table>
+  <div id="loginInfo"></div>
+  <div id="operations"></div>
+
 
   <script>
       function loginUser() {
@@ -46,8 +49,25 @@
           request.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE) {
               if (this.status === 200) {
+                const responseData = JSON.parse(this.responseText);
                 console.log('Login Successful:', this.responseText);
                 // Handle login success here
+                localStorage.setItem('username', responseData.username);
+                localStorage.setItem('role', responseData.role);
+                const loginInfoDiv = document.getElementById('loginInfo');
+                    loginInfoDiv.innerHTML = `
+                        <p>Username: ${responseData.username}</p>
+                        <p>Role: ${responseData.role}</p>
+                        <p>Token: ${responseData.token}</p>
+                    `;
+                    displayUserOperations(responseData.role);
+
+                    const operationButton = document.createElement('button');
+                    operationButton.textContent = 'Go to Operations';
+                    operationButton.onclick = function() {
+                        window.location.href = '/operation.html';
+                    };
+                    loginInfoDiv.appendChild(operationButton);
               } else {
                 console.error('Login failed:', this.responseText);
                 // Handle login failure here
@@ -55,7 +75,32 @@
             }
           };
           request.send(JSON.stringify(loginData));
+        } 
+      }
+      function displayUserOperations(role) {
+        var operationsDiv = document.getElementById('operations');
+        operationsDiv.innerHTML = ''; // 清空之前的内容
+        var operationsHtml = '';
+
+        // 根据角色展示不同的权限操作
+        switch(role) {
+          case 'SU':
+            operationsHtml += '<p>SU可以执行的操作...</p>';
+            break;
+          case 'GA':
+            operationsHtml += '<p>GA可以执行的操作...</p>';
+            break;
+          case 'GBO':
+            operationsHtml += '<p>GBO可以执行的操作...</p>';
+            break;
+          case 'USER':
+            operationsHtml += '<p>USER可以执行的操作...</p>';
+            break;
+          default:
+            operationsHtml = '<p>未知角色</p>';
         }
+
+        operationsDiv.innerHTML = operationsHtml; // 显示操作列表
       }
   </script>
 </body>
